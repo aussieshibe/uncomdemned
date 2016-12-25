@@ -72,17 +72,23 @@ class SceneHandler {
     this.gameObjects.push(testFloor);
     this.world.add(testFloor.physicsBody);
 
-    // Testing GameObjectFactory
-    var newObject = GameObjectFactory.build({
-        base: {
-          position: new THREE.Vector3(0, 0, 0)
-        },
-        drawable: {},
-        rigidbody: {}
-      });
-    this.scene.add(newObject);
-    this.world.add(newObject.rigidbody);
-    this.gameObjects.push(newObject);
+    for (var x = 0; x < 5; x++) {
+      for (var y = 0; y < 5; y++) {
+        for (var z = 0; z < 5; z++) {
+          // Testing GameObjectFactory
+          var newObject = GameObjectFactory.build({
+              base: {
+                position: new THREE.Vector3(x * 100, y * 100, z * -100)
+              },
+              drawable: {},
+              rigidbody: {}
+            });
+          this.scene.add(newObject);
+          this.world.add(newObject.rigidbody);
+          this.gameObjects.push(newObject);
+        }
+      }
+    }
   }
 
   /**

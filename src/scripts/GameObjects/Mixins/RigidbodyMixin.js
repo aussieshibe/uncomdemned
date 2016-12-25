@@ -26,15 +26,21 @@ import ObjLoader from '../../Util/Loaders/ObjLoader';
 /**
  * The RigidbodyMixin class
  * Defines a mixin to add a physics object to a GameObject
- * @param {Object} options The options to be passed to the mixin
+ * @param {Object} base The base options to be passed to all mixins
+ * @param {number[]} base.position The coordinates of the GameObject
+ * @param {Object} module The module specific options
  */
 class RigidbodyMixin extends CANNON.Body {
-  constructor(options) {
+  constructor(base, module) {
     super({mass: 1});
-    this.position.set(0, 0, 0);
+    this.position.set(base.position.x, base.position.y, base.position.z);
     this.addShape(new CANNON.Box(new CANNON.Vec3(50, 50, 50)));
   }
 
+  /**
+   * Update sets the position and rotation of the parent to
+   * match the rigidbody
+   */
   update(parent, delta) {
     parent.position.x = this.position.x;
     parent.position.y = this.position.y;

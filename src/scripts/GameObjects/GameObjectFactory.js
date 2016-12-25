@@ -35,6 +35,7 @@ class GameObjectFactory {
 
   build(options) {
     var go = new GameObject();
+    var pos = options.base.position;
     if (options.drawable) {
       go.mesh = new DrawableMixin(options.base, options.drawable);
       // Add the new mesh to the parent GameObject
@@ -48,6 +49,7 @@ class GameObjectFactory {
         update();
       };
     }
+    go.position.set(pos.x, pos.y, pos.z);
     return go;
   }
 

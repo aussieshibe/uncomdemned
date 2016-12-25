@@ -41,8 +41,8 @@ class DrawableMixin extends THREE.Mesh{
     var material = MatLoader(module.material);
     // Run THREE.Mesh constructor with loaded geo/mat if available
     super(geometry, material);
-    console.log(base.position);
-    this.position.set(base.position.x, base.position.y, base.position.z);
+    // The position of the mixin is the local offset from the parent GameObject
+    this.position.set(0, 0, 0);
   }
 }
 
