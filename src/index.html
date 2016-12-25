@@ -46,7 +46,13 @@
   <!-- Our app bundle -->
   <script src="./scripts/app.js"></script>
   <!-- Allow live-reloading -->
-  <script src="//10.0.0.7:35729/livereload.js"></script>
+  <script type="text/javascript">
+    var livereload = document.createElement('script');
+    livereload.type = 'text/javascript';
+    var host = window.location.hostname;
+    livereload.src = 'http://' + host + ':35729/livereload.js';
+    document.body.append(livereload);
+  </script>
 
 </body>
 </html>

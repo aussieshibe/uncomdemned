@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       }
     },
     'connect': {
-      base: 'build'
+      base: 'build',
     }
   });
 
@@ -71,7 +71,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-jscs');
 
+  // Build-only task
+  grunt.registerTask('build', 'jscs', 'browserify', 'htmlmin', 'copy');
+
+  // Default task, builds project and then configures watch
+  // for automatic rebuild + live reload on file edits
   grunt.registerTask('default',
     ['jscs', 'browserify', 'htmlmin', 'copy', 'connect', 'watch']);
+  // The task to run when watch triggers a reload, does not include connect or
+  // watch tasks as these will already be running
   grunt.registerTask('watchReload', ['jscs', 'browserify', 'htmlmin', 'copy']);
 };
