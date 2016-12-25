@@ -35,6 +35,9 @@ class Player extends GameObject {
    */
   constructor() {
     super();
+    // View ranges in radians, must be < 90 degrees to avoid Weird Stuff(tm)
+    this.MAX_VIEW_PITCH = 80 * (Math.PI / 180);
+    this.MIN_VIEW_PITCH = -80 * (Math.PI / 180);
     this.name = 'Player';
     this._setupCamera();
     this._inputHandler = new InputHandler();
@@ -46,16 +49,23 @@ class Player extends GameObject {
   update(delta) {
     super.update(delta);
 
-    // Update player velocity based on input from InputHandler
+    // Calculate local player velocity based on input from InputHandler
     var mov = this._inputHandler.getMovement().multiplyScalar(500);
-    // Rotate new velocity based on camera rotation
+    // Rotate new velocity based on camera rotation to get global velocity
     mov.applyEuler(new THREE.Euler(this._pitchObject.rotation.x, 0, 0));
     this.velocity.set(mov.x, mov.y, mov.z);
-
     // Update player view rotation based on input from InputHandler
     var mouseMov = this._inputHandler.getRotation();
+    // Clamp newPitch within MAX_VIEW_PITCH and MIN_VIEW_PITCH
+    var newPitch =
+        Math.min(
+          this.MAX_VIEW_PITCH,
+          Math.max(
+            this.MIN_VIEW_PITCH,
+            this._pitchObject.rotation.x - mouseMov.y));
+    // Apply rotations to Player/_pitchObject
     this.rotateY(-mouseMov.x);
-    this._pitchObject.rotateX(-mouseMov.y);
+    this._pitchObject.rotation.x = newPitch;
   }
 
   /**
