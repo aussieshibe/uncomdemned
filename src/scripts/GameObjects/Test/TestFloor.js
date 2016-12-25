@@ -38,10 +38,11 @@ class TestFloor extends GameObject{
     var material = new THREE.MeshLambertMaterial({color: 0xaaaaaa});
     this.mesh = new THREE.Mesh(geometry, material);
     this.name = 'TestFloor';
+    this.position.set(0, -200, 0);
     this.add(this.mesh);
 
     // Physics
-    this.physicsBody.mass = 0;
+    this.physicsBody = new CANNON.Body({mass: 0});
     this.physicsBody.addShape(new CANNON.Box(new CANNON.Vec3(500, 50, 500)));
     this.physicsBody.position.set(0, -200, 0);
   }

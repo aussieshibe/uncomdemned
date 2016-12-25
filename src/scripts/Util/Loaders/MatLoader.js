@@ -20,23 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+let instance = null;
 
 /**
- * The GameObject class, intended to be extended
- * Contains all functions / properties that all game objects will have
+ * The MatLoader function
+ * Will create a singleton to load Obj files
+ * NOTE: This currently just returns null, for testing
  */
-class GameObject extends THREE.Object3D{
-  constructor() {
-    super();
-  }
-
-  /**
-   * Update this GameObject based on delta time
-   * @param {number} delta Delta time (ms)
-   */
-  update(delta) {
-  }
-
+function MatLoader() {
+  return undefined;
 }
 
-export { GameObject as default };
+export { MatLoader as default };

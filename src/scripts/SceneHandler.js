@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-import TestGameObject from './GameObjects/TestGameObject';
 import TestFloor from './GameObjects/Test/TestFloor';
+import GameObjectFactory from './GameObjects/GameObjectFactory';
 import Player from './GameObjects/Player/Player';
 
 /**
@@ -39,6 +39,8 @@ class SceneHandler {
 
     this.world = new CANNON.World();
     this.world.gravity.set(0, -20, 0);
+
+    //this.gameObjectFactory = new GameObjectFactory();
 
     this.gameObjects = [];
 
@@ -64,17 +66,23 @@ class SceneHandler {
     plight.position.z = 200;
     this.scene.add(plight);
 
-    // Testing object
-    var testObject = new TestGameObject();
-    this.scene.add(testObject);
-    this.gameObjects.push(testObject);
-    this.world.add(testObject.physicsBody);
-
     // Testing floor
     var testFloor = new TestFloor();
     this.scene.add(testFloor);
     this.gameObjects.push(testFloor);
     this.world.add(testFloor.physicsBody);
+
+    // Testing GameObjectFactory
+    var newObject = GameObjectFactory.build({
+        base: {
+          position: new THREE.Vector3(0, 0, 0)
+        },
+        drawable: {},
+        rigidbody: {}
+      });
+    this.scene.add(newObject);
+    this.world.add(newObject.rigidbody);
+    this.gameObjects.push(newObject);
   }
 
   /**

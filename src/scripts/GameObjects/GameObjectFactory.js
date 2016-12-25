@@ -22,36 +22,37 @@
  */
 
 import GameObject from './GameObject';
+import DrawableMixin from './Mixins/DrawableMixin';
+import RigidbodyMixin from './Mixins/RigidbodyMixin';
 
 /**
- * A test of the GameObject class
- * Simply generates a rotating cube
+ * The GameObjectFactory class
+ * GameObjectFactories create a GameObject and add any necessary mixins
  */
-class TestGameObject extends GameObject{
-  /**
-   * Constructor for TestGameObject
-   */
+class GameObjectFactory {
   constructor() {
-    super();
-
-    // Rendering
-    var geometry = new THREE.CubeGeometry(100, 100, 100);
-    var material = new THREE.MeshLambertMaterial({color: 0x48fa3f});
-    this.mesh = new THREE.Mesh(geometry, material);
-    this.physicsBody.position.set(0, 0, 0);
-    this.name = 'TestGameObject';
-    this.add(this.mesh);
-
-    // Physics
-    /*this.physicsBody = new CANNON.Body({
-        shape: new CANNON.Sphere(100),
-        mass: 1
-      });
-    */
-    this.physicsBody.mass = 1;
-    this.physicsBody.addShape(new CANNON.Box(new CANNON.Vec3(50, 50, 50)));
-
   }
+
+  build(options) {
+    var go = new GameObject();
+    if (options.drawable) {
+      go.mesh = new DrawableMixin(options.base, options.drawable);
+      // Add the new mesh to the parent GameObject
+      go.add(go.mesh);
+    }
+    if (options.rigidbody) {
+      go.rigidbody = new RigidbodyMixin(options.base, options.rigidbody);
+      var update = go.update;
+      go.update = function(delta) {
+        go.rigidbody.update(go, delta);
+        update();
+      };
+    }
+    return go;
+  }
+
 }
 
-export { TestGameObject as default };
+var GOF = new GameObjectFactory();
+
+export { GOF as default };

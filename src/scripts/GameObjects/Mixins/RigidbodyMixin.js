@@ -21,22 +21,29 @@
  * SOFTWARE.
  */
 
+import ObjLoader from '../../Util/Loaders/ObjLoader';
+
 /**
- * The GameObject class, intended to be extended
- * Contains all functions / properties that all game objects will have
+ * The RigidbodyMixin class
+ * Defines a mixin to add a physics object to a GameObject
+ * @param {Object} options The options to be passed to the mixin
  */
-class GameObject extends THREE.Object3D{
-  constructor() {
-    super();
+class RigidbodyMixin extends CANNON.Body {
+  constructor(options) {
+    super({mass: 1});
+    this.position.set(0, 0, 0);
+    this.addShape(new CANNON.Box(new CANNON.Vec3(50, 50, 50)));
   }
 
-  /**
-   * Update this GameObject based on delta time
-   * @param {number} delta Delta time (ms)
-   */
-  update(delta) {
+  update(parent, delta) {
+    parent.position.x = this.position.x;
+    parent.position.y = this.position.y;
+    parent.position.z = this.position.z;
+    parent.quaternion.x = this.quaternion.x;
+    parent.quaternion.y = this.quaternion.y;
+    parent.quaternion.z = this.quaternion.z;
+    parent.quaternion.w = this.quaternion.w;
   }
-
 }
 
-export { GameObject as default };
+export { RigidbodyMixin as default };

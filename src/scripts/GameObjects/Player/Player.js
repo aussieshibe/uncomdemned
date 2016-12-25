@@ -43,7 +43,7 @@ class Player extends GameObject {
     this._inputHandler = new InputHandler();
 
     // Physics
-    this.physicsBody.mass = 5;
+    this.physicsBody = new CANNON.Body({mass: 5});
     this.physicsBody.position.set(0, 0, 300);
     var physMesh = new CANNON.Box(new CANNON.Vec3(20, 100, 20));
     this.physicsBody.addShape(physMesh);
@@ -82,6 +82,10 @@ class Player extends GameObject {
     this.physicsBody.quaternion.y = this.quaternion.y;
     this.physicsBody.quaternion.z = this.quaternion.z;
     this.physicsBody.quaternion.w = this.quaternion.w;
+
+    this.position.x = this.physicsBody.position.x;
+    this.position.y = this.physicsBody.position.y;
+    this.position.z = this.physicsBody.position.z;
 
     // Now that we've updated our physics object with the correct rotations,
     // we can call super.update. If we do this in the other order, the main
