@@ -33,28 +33,24 @@ class TestGameObject extends GameObject{
    */
   constructor() {
     super();
+
+    // Rendering
     var geometry = new THREE.CubeGeometry(100, 100, 100);
     var material = new THREE.MeshLambertMaterial({color: 0x48fa3f});
     this.mesh = new THREE.Mesh(geometry, material);
-    this.position.set(0, 0, -1000);
+    this.physicsBody.position.set(0, 0, 0);
     this.name = 'TestGameObject';
     this.add(this.mesh);
-  }
 
-  /**
-   * Update the TestGameObject based on delta time
-   */
-  update(delta) {
-    super.update(delta);
-    this.mesh.position
-        .set(this.position.x, this.position.y, this.position.z);
-    this.mesh.rotation
-        .set(this.rotation.x, this.rotation.y, this.rotation.z);
+    // Physics
+    /*this.physicsBody = new CANNON.Body({
+        shape: new CANNON.Sphere(100),
+        mass: 1
+      });
+    */
+    this.physicsBody.mass = 1;
+    this.physicsBody.addShape(new CANNON.Box(new CANNON.Vec3(50, 50, 50)));
 
-    //this.velocity.x = 100;
-    //this.rotation.x += 0.1 * delta / 1000;
-    //this.rotation.y += 0.2 * delta / 1000;
-    //this.rotation.z += 0.3 * delta / 1000;
   }
 }
 

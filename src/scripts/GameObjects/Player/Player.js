@@ -41,19 +41,25 @@ class Player extends GameObject {
     this.name = 'Player';
     this._setupCamera();
     this._inputHandler = new InputHandler();
+
+    // Physics
+    this.physicsBody.mass = 1;
+    this.physicsBody.linearDamping = 0.5;
+    this.physicsBody.position.set(0, 0, 300);
+    var physMesh = new CANNON.Box(new CANNON.Vec3(20, 100, 20));
+    this.physicsBody.addShape(physMesh);
+
   }
 
   /**
    * Player specific update functionality
    */
   update(delta) {
-    super.update(delta);
+    // Apply the movement force from the inputHandler
+    this.physicsBody.applyLocalForce(
+        this._inputHandler.getMovement().multiplyScalar(100),
+        CANNON.Vec3.ZERO);
 
-    // Calculate local player velocity based on input from InputHandler
-    var mov = this._inputHandler.getMovement().multiplyScalar(500);
-    // Rotate new velocity based on camera rotation to get global velocity
-    mov.applyEuler(new THREE.Euler(this._pitchObject.rotation.x, 0, 0));
-    this.velocity.set(mov.x, mov.y, mov.z);
     // Update player view rotation based on input from InputHandler
     var mouseMov = this._inputHandler.getRotation();
     // Clamp newPitch within MAX_VIEW_PITCH and MIN_VIEW_PITCH
@@ -63,9 +69,21 @@ class Player extends GameObject {
           Math.max(
             this.MIN_VIEW_PITCH,
             this._pitchObject.rotation.x - mouseMov.y));
+
     // Apply rotations to Player/_pitchObject
     this.rotateY(-mouseMov.x);
     this._pitchObject.rotation.x = newPitch;
+
+    // Apply our rotation to the physics object
+    this.physicsBody.quaternion.x = this.quaternion.x;
+    this.physicsBody.quaternion.y = this.quaternion.y;
+    this.physicsBody.quaternion.z = this.quaternion.z;
+    this.physicsBody.quaternion.w = this.quaternion.w;
+
+    // Now that we've updated our physics object with the correct rotations,
+    // we can call super.update. If we do this in the other order, the main
+    // player object can rotate around non-Y axes (a.k.a. fall over)
+    super.update(delta);
   }
 
   /**

@@ -22,6 +22,7 @@
  */
 
 import TestGameObject from './GameObjects/TestGameObject';
+import TestFloor from './GameObjects/Test/TestFloor';
 import Player from './GameObjects/Player/Player';
 
 /**
@@ -35,6 +36,9 @@ class SceneHandler {
   constructor() {
     this.scene = new THREE.Scene();
     this.scene.name = 'Scene';
+
+    this.world = new CANNON.World();
+    this.world.gravity.set(0, -10, 0);
 
     this.gameObjects = [];
 
@@ -50,6 +54,7 @@ class SceneHandler {
     this.player = new Player();
     this.gameObjects.push(this.player);
     this.scene.add(this.player);
+    this.world.add(this.player.physicsBody);
 
     // Testing lights
     var light = new THREE.AmbientLight(0xffffff, 0.5);
@@ -63,6 +68,13 @@ class SceneHandler {
     var testObject = new TestGameObject();
     this.scene.add(testObject);
     this.gameObjects.push(testObject);
+    this.world.add(testObject.physicsBody);
+
+    // Testing floor
+    var testFloor = new TestFloor();
+    this.scene.add(testFloor);
+    this.gameObjects.push(testFloor);
+    this.world.add(testFloor.physicsBody);
   }
 
   /**
@@ -70,6 +82,7 @@ class SceneHandler {
    * @param {number} delta
    */
   update(delta) {
+    this.world.step(delta);
     for (var go of this.gameObjects) {
       go.update(delta);
     }

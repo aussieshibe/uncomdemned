@@ -28,8 +28,11 @@ class ViewRenderer {
   /**
    * Constructor for ViewRenderer
    */
-  constructor(canvas) {
-    this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+  constructor(params) {
+    this.renderer =
+        new THREE.WebGLRenderer({canvas: params.canvas, antialias: true});
+    this.debugRenderer =
+        new THREE.CannonDebugRenderer(params.scene, params.world);
     this.renderer.setClearColor(0x7777ff);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -37,11 +40,18 @@ class ViewRenderer {
 
   /**
    * Renders the scene to the canvas
-   * @param {SceneHandler} sceneHandler The scene to be rendered
+   * @param {SceneHandler} sceneHandler The scene to be rendereds
    */
   render(sceneHandler) {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.render(sceneHandler.scene, sceneHandler.player.camera);
+  }
+
+  /**
+   * Performs any non-render based updates for the renderer
+   */
+  update(delta) {
+    this.debugRenderer.update();
   }
 
 }

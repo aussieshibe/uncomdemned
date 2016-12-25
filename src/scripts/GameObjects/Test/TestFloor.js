@@ -21,32 +21,30 @@
  * SOFTWARE.
  */
 
+import GameObject from '../GameObject';
+
 /**
- * The GameObject class, intended to be extended
- * Contains all functions / properties that all game objects will have
+ * A super simple floor cube, used for testing
  */
-class GameObject extends THREE.Object3D{
+class TestFloor extends GameObject{
+  /**
+   * Constructor for TestFloor
+   */
   constructor() {
     super();
-    this.physicsBody = new CANNON.Body({mass: 1});
-    this.physicsBody.position.set(0, 0, 0);
-  }
 
-  /**
-   * Update this GameObject based on delta time
-   * @param {number} delta Delta time (ms)
-   */
-  update(delta) {
-    // Copy physics positions and rotations to this Object
-    this.position.x = this.physicsBody.position.x;
-    this.position.y = this.physicsBody.position.y;
-    this.position.z = this.physicsBody.position.z;
-    this.quaternion.x = this.physicsBody.quaternion.x;
-    this.quaternion.y = this.physicsBody.quaternion.y;
-    this.quaternion.z = this.physicsBody.quaternion.z;
-    this.quaternion.w = this.physicsBody.quaternion.w;
-  }
+    // Rendering
+    var geometry = new THREE.CubeGeometry(1000, 100, 1000);
+    var material = new THREE.MeshLambertMaterial({color: 0xaaaaaa});
+    this.mesh = new THREE.Mesh(geometry, material);
+    this.name = 'TestFloor';
+    this.add(this.mesh);
 
+    // Physics
+    this.physicsBody.mass = 0;
+    this.physicsBody.addShape(new CANNON.Box(new CANNON.Vec3(500, 50, 500)));
+    this.physicsBody.position.set(0, -200, 0);
+  }
 }
 
-export { GameObject as default };
+export { TestFloor as default };

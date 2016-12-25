@@ -37,7 +37,10 @@ class Engine {
     this.timer = new GameTimer();
     this.sceneHandler = new SceneHandler();
     this.sceneHandler.init();
-    this.renderer = new ViewRenderer(canvas);
+    this.renderer = new ViewRenderer({
+        canvas: canvas,
+        scene: this.sceneHandler.scene,
+        world: this.sceneHandler.world});
   }
 
   /**
@@ -47,6 +50,7 @@ class Engine {
   tick() {
     this.timer.update();
     this.sceneHandler.update(this.timer.deltaTime);
+    this.renderer.update();
     this.renderer.render(this.sceneHandler);
   }
 
