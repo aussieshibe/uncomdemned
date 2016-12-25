@@ -38,7 +38,7 @@ class SceneHandler {
     this.scene.name = 'Scene';
 
     this.world = new CANNON.World();
-    this.world.gravity.set(0, -10, 0);
+    this.world.gravity.set(0, -20, 0);
 
     this.gameObjects = [];
 

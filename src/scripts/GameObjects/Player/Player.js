@@ -43,8 +43,7 @@ class Player extends GameObject {
     this._inputHandler = new InputHandler();
 
     // Physics
-    this.physicsBody.mass = 1;
-    this.physicsBody.linearDamping = 0.5;
+    this.physicsBody.mass = 5;
     this.physicsBody.position.set(0, 0, 300);
     var physMesh = new CANNON.Box(new CANNON.Vec3(20, 100, 20));
     this.physicsBody.addShape(physMesh);
@@ -55,10 +54,14 @@ class Player extends GameObject {
    * Player specific update functionality
    */
   update(delta) {
-    // Apply the movement force from the inputHandler
-    this.physicsBody.applyLocalForce(
-        this._inputHandler.getMovement().multiplyScalar(100),
-        CANNON.Vec3.ZERO);
+    // Calculate desired movement and apply to the physicsBody
+    var mov =
+        this._inputHandler
+            .getMovement()
+            .applyQuaternion(this.quaternion)
+            .multiplyScalar(100);
+    this.physicsBody.velocity.x = mov.x;
+    this.physicsBody.velocity.z = mov.z;
 
     // Update player view rotation based on input from InputHandler
     var mouseMov = this._inputHandler.getRotation();
