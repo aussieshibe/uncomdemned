@@ -29,7 +29,7 @@ class GameTimer {
    * Constructor for GameTimer class
    */
   constructor() {
-    this.lastUpdate = 0;
+    this.lastUpdate = performance.now();
     this.deltaTime = 0;
   }
 

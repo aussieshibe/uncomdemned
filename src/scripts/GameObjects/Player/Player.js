@@ -43,9 +43,9 @@ class Player extends GameObject {
     this._inputHandler = new InputHandler();
 
     // Physics
-    this.physicsBody = new CANNON.Body({mass: 5});
-    this.physicsBody.position.set(0, 0, 300);
-    var physMesh = new CANNON.Box(new CANNON.Vec3(20, 100, 20));
+    this.physicsBody = new CANNON.Body({mass: 500});
+    this.physicsBody.position.set(0, 0, 30);
+    var physMesh = new CANNON.Box(new CANNON.Vec3(0.5, 1, 0.5));
     this.physicsBody.addShape(physMesh);
 
   }
@@ -59,7 +59,7 @@ class Player extends GameObject {
         this._inputHandler
             .getMovement()
             .applyQuaternion(this.quaternion)
-            .multiplyScalar(100);
+            .multiplyScalar(10);
     this.physicsBody.velocity.x = mov.x;
     this.physicsBody.velocity.z = mov.z;
 
@@ -120,7 +120,7 @@ class Player extends GameObject {
     this._pitchObject.name = '_pitchObject';
     // Add the camera as a child of the pitch object
     this._pitchObject.add(this.camera);
-    this._pitchObject.position.y = 10;
+    this._pitchObject.position.y = 2;
     // Add the pitch object as a child of the Player
     this.add(this._pitchObject);
   }

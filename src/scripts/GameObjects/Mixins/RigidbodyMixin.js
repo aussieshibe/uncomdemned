@@ -34,7 +34,7 @@ class RigidbodyMixin extends CANNON.Body {
   constructor(base, module) {
     super({mass: 1});
     this.position.set(base.position.x, base.position.y, base.position.z);
-    this.addShape(new CANNON.Box(new CANNON.Vec3(50, 50, 50)));
+    this.addShape(new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)));
   }
 
   /**

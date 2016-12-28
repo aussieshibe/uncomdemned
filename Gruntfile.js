@@ -42,7 +42,8 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
-          {expand: true, cwd: 'src/', src: 'lib/**', dest: 'build/scripts'}
+          {expand: true, cwd: 'src/', src: 'lib/**', dest: 'build/scripts'},
+          {expand: true, cwd: 'src/', src: 'mesh/**', dest: 'build/gamedata/'}
         ]
       }
     },

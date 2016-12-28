@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-import ObjLoader from '../../Util/Loaders/ObjLoader';
-import MatLoader from '../../Util/Loaders/MatLoader';
+var loader = new THREE.JSONLoader();
+var objPath = window.location.pathname + 'gamedata/mesh/';
 
 /**
  * The DrawableMixin class
@@ -35,14 +35,31 @@ import MatLoader from '../../Util/Loaders/MatLoader';
  */
 class DrawableMixin extends THREE.Mesh{
   constructor(base, module) {
-    var geometry = module.object ?
-        ObjLoader(module.object) :
-        new THREE.CubeGeometry(100, 100, 100);
-    var material = MatLoader(module.material);
-    // Run THREE.Mesh constructor with loaded geo/mat if available
-    super(geometry, material);
-    // The position of the mixin is the local offset from the parent GameObject
+    super();
+    // The position of the mixin is the local offset from parent GameObject
     this.position.set(0, 0, 0);
+    // Load the geometry from the ObjectLoader
+    this.loadMesh(base, module);
+  }
+
+  loadMesh(base, module) {
+    if (module && module.mesh) {
+      loader.load(
+        objPath + module.mesh + '.json',
+        (g, m) => { this.loadMeshCallback(g, m); });
+    } else {
+      // Setup a default from base.dimensions, otherwise 1x1x1 cube
+      var dimensions = base.dimensions || {x: 1, y: 1, z: 1};
+      mesh = new THREE.CubeGeometry(dimensions.x, dimensions.y, dimensions.z);
+    }
+  }
+
+  loadMeshCallback(geometry, materials) {
+    this.geometry = geometry;
+    if (materials && materials.length > 0) {
+      console.log('Yes');
+      this.material = new THREE.MultiMaterial(materials);
+    }
   }
 }
 

@@ -38,6 +38,7 @@ class SceneHandler {
     this.scene.name = 'Scene';
 
     this.world = new CANNON.World();
+    this.world.solver.iterations = 20;
     this.world.gravity.set(0, -20, 0);
 
     //this.gameObjectFactory = new GameObjectFactory();
@@ -78,9 +79,11 @@ class SceneHandler {
           // Testing GameObjectFactory
           var newObject = GameObjectFactory.build({
               base: {
-                position: new THREE.Vector3(x * 100, y * 100, z * -100)
+                position: new THREE.Vector3(x * 1, y * 1, z * -1)
               },
-              drawable: {},
+              drawable: {
+                mesh: 'basic/cube-1x1x1'
+              },
               rigidbody: {}
             });
           this.scene.add(newObject);
