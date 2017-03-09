@@ -35,4 +35,6 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
-loop();
+// Tick once, then delay start of loop by 1 sec
+theEngine.tick();
+setTimeout(loop, 1000);

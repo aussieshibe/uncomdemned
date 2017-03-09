@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-import TestGameObject from './GameObjects/TestGameObject';
 import TestFloor from './GameObjects/Test/TestFloor';
+import GameObjectFactory from './GameObjects/GameObjectFactory';
 import Player from './GameObjects/Player/Player';
 
 /**
@@ -38,7 +38,10 @@ class SceneHandler {
     this.scene.name = 'Scene';
 
     this.world = new CANNON.World();
+    this.world.solver.iterations = 20;
     this.world.gravity.set(0, -20, 0);
+
+    //this.gameObjectFactory = new GameObjectFactory();
 
     this.gameObjects = [];
 
@@ -64,17 +67,34 @@ class SceneHandler {
     plight.position.z = 200;
     this.scene.add(plight);
 
-    // Testing object
-    var testObject = new TestGameObject();
-    this.scene.add(testObject);
-    this.gameObjects.push(testObject);
-    this.world.add(testObject.physicsBody);
-
     // Testing floor
     var testFloor = new TestFloor();
     this.scene.add(testFloor);
     this.gameObjects.push(testFloor);
     this.world.add(testFloor.physicsBody);
+
+    for (var x = 0; x < 5; x++) {
+      for (var y = 0; y < 5; y++) {
+        for (var z = 0; z < 5; z++) {
+          // Testing GameObjectFactory
+          GameObjectFactory.build({
+              base: {
+                position: new THREE.Vector3(x * 1, y * 1 - 20, z * -1)
+              },
+              drawable: {
+                objFile: 'basic/cube-1x1x1'
+              },
+              rigidbody: {
+                colliderFile: 'basic/cube-1x1x1'
+              }
+            }).then((newObject) => {
+              this.scene.add(newObject);
+              this.world.add(newObject.rigidbody);
+              this.gameObjects.push(newObject);
+            });
+        }
+      }
+    }
   }
 
   /**

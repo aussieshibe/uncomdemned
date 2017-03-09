@@ -21,22 +21,31 @@
  * SOFTWARE.
  */
 
+import DrawableMixin from './DrawableMixin';
+import ObjLoader from '../../Util/Loaders/ObjLoader';
+
 /**
- * The GameObject class, intended to be extended
- * Contains all functions / properties that all game objects will have
+ * The DrawableMixinFactory class
+ * DrawableMixinFactory create a DrawableMixin and load any necessary resources
  */
-class GameObject extends THREE.Object3D{
-  constructor() {
-    super();
-  }
+class DrawableMixinFactory {
+  constructor() {}
 
   /**
-   * Update this GameObject based on delta time
-   * @param {number} delta Delta time (ms)
+   * The build function for DrawableMixinFactory
+   * @param {Object} options The options for the new DrawableMixin
+   * @param {number[]} options.position The position of the mixin within the obj
+   * @param {string} options.objFile The object file to apply to the DM
    */
-  update(delta) {
+  build(options) {
+    var drawableMixin = new DrawableMixin();
+    ObjLoader.load(options.objFile, (g, m) => {
+      drawableMixin.geometry = g;
+      drawableMixin.material = new THREE.MultiMaterial(m);
+    });
+    return drawableMixin;
   }
 
 }
 
-export { GameObject as default };
+export { DrawableMixinFactory as default };

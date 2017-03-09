@@ -21,22 +21,22 @@
  * SOFTWARE.
  */
 
+var loader = new THREE.JSONLoader();
+var objPath = window.location.pathname + 'gamedata/mesh/';
+
 /**
- * The GameObject class, intended to be extended
- * Contains all functions / properties that all game objects will have
+ * The DrawableMixin class
+ * Defines a mixin to add a visible model to a GameObject
+ * @param {Object} base The base options to be passed to all mixins
+ * @param {number[]} base.position The coordinates of the GameObject
+ * @param {Object} module The module specific options
+ * @param {string} module.object The name of the obj file for this mesh
+ * @param {string} module.material The name of the mat file for this mesh
  */
-class GameObject extends THREE.Object3D{
-  constructor() {
+class DrawableMixin extends THREE.Mesh{
+  constructor(base, module) {
     super();
   }
-
-  /**
-   * Update this GameObject based on delta time
-   * @param {number} delta Delta time (ms)
-   */
-  update(delta) {
-  }
-
 }
 
-export { GameObject as default };
+export { DrawableMixin as default };

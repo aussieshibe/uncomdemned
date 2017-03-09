@@ -23,5 +23,9 @@
   },
   "browserify-shim": {
     "three": "global:THREE"
+  },
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "jsonloader": "^1.0.1"
   }
 }

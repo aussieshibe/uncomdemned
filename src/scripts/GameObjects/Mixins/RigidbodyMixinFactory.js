@@ -21,22 +21,26 @@
  * SOFTWARE.
  */
 
+import RigidbodyMixin from './RigidbodyMixin';
+import ColliderLoader from '../../Util/Loaders/ColliderLoader';
+
 /**
- * The GameObject class, intended to be extended
- * Contains all functions / properties that all game objects will have
+ * The RigidbodyMixinFactory class
  */
-class GameObject extends THREE.Object3D{
-  constructor() {
-    super();
-  }
+class RigidbodyMixinFactory {
+  constructor() {}
 
   /**
-   * Update this GameObject based on delta time
-   * @param {number} delta Delta time (ms)
+   * The build function for RigidbodyMixinFactory
+   * @param {Object} base The base options for the GameObject
+   * @param {string} module.colliderFile The object file to apply to the DM
    */
-  update(delta) {
+  build(base, module) {
+    var rigidbodyMixin = new RigidbodyMixin(base, module);
+    // Return promise which resolves when load of collider data completes
+    return ColliderLoader.load(module.colliderFile, rigidbodyMixin);
   }
 
 }
 
-export { GameObject as default };
+export { RigidbodyMixinFactory as default };

@@ -21,22 +21,35 @@
  * SOFTWARE.
  */
 
+// THREE.JSONLoader to be used by our ObjLoader
+let loader = new THREE.JSONLoader();
+let objPath = window.location.pathname + 'gamedata/mesh/';
+
+// Singleton instance
+let instance = null;
+
 /**
- * The GameObject class, intended to be extended
- * Contains all functions / properties that all game objects will have
+ * The ObjLoader class
  */
-class GameObject extends THREE.Object3D{
+class _ObjLoader {
   constructor() {
-    super();
+    if (!instance) {
+      instance = this;
+    }
+    return instance;
   }
 
-  /**
-   * Update this GameObject based on delta time
-   * @param {number} delta Delta time (ms)
-   */
-  update(delta) {
+  load (objFile, callback) {
+    if (objFile) {
+      loader.load(
+          objPath + objFile + '.json',
+          (g, m) => { callback(g, m); });
+    } else {
+      throw new Error('Invalid parameters provided to ObjLoader');
+    }
   }
-
 }
 
-export { GameObject as default };
+let ObjLoader = new _ObjLoader();
+
+export { ObjLoader as default };

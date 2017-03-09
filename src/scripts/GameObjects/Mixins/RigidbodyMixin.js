@@ -21,37 +21,32 @@
  * SOFTWARE.
  */
 
-import GameObject from './GameObject';
-
 /**
- * A test of the GameObject class
- * Simply generates a rotating cube
+ * The RigidbodyMixin class
+ * Defines a mixin to add a physics object to a GameObject
+ * @param {Object} base The base options to be passed to all mixins
+ * @param {number[]} base.position The coordinates of the GameObject
+ * @param {Object} module The module specific options
  */
-class TestGameObject extends GameObject{
+class RigidbodyMixin extends CANNON.Body {
+  constructor(base, module) {
+    super({mass: 1}); // TODO: Move mass to collider file
+    this.position.set(base.position.x, base.position.y, base.position.z);
+  }
+
   /**
-   * Constructor for TestGameObject
+   * Update sets the position and rotation of the parent to
+   * match the rigidbody
    */
-  constructor() {
-    super();
-
-    // Rendering
-    var geometry = new THREE.CubeGeometry(100, 100, 100);
-    var material = new THREE.MeshLambertMaterial({color: 0x48fa3f});
-    this.mesh = new THREE.Mesh(geometry, material);
-    this.physicsBody.position.set(0, 0, 0);
-    this.name = 'TestGameObject';
-    this.add(this.mesh);
-
-    // Physics
-    /*this.physicsBody = new CANNON.Body({
-        shape: new CANNON.Sphere(100),
-        mass: 1
-      });
-    */
-    this.physicsBody.mass = 1;
-    this.physicsBody.addShape(new CANNON.Box(new CANNON.Vec3(50, 50, 50)));
-
+  update(parent, delta) {
+    parent.position.x = this.position.x;
+    parent.position.y = this.position.y;
+    parent.position.z = this.position.z;
+    parent.quaternion.x = this.quaternion.x;
+    parent.quaternion.y = this.quaternion.y;
+    parent.quaternion.z = this.quaternion.z;
+    parent.quaternion.w = this.quaternion.w;
   }
 }
 
-export { TestGameObject as default };
+export { RigidbodyMixin as default };
