@@ -20,15 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-let instance = null;
+
+import RigidbodyMixin from './RigidbodyMixin';
+import ColliderLoader from '../../Util/Loaders/ColliderLoader';
 
 /**
- * The MatLoader function
- * Will create a singleton to load Obj files
- * NOTE: This currently just returns null, for testing
+ * The RigidbodyMixinFactory class
  */
-function MatLoader() {
-  return undefined;
+class RigidbodyMixinFactory {
+  constructor() {}
+
+  /**
+   * The build function for RigidbodyMixinFactory
+   * @param {Object} base The base options for the GameObject
+   * @param {string} module.colliderFile The object file to apply to the DM
+   */
+  build(base, module) {
+    var rigidbodyMixin = new RigidbodyMixin(base, module);
+    // Return promise which resolves when load of collider data completes
+    return ColliderLoader.load(module.colliderFile, rigidbodyMixin);
+  }
+
 }
 
-export { MatLoader as default };
+export { RigidbodyMixinFactory as default };

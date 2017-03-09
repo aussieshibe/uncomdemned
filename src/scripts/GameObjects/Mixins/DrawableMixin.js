@@ -36,30 +36,6 @@ var objPath = window.location.pathname + 'gamedata/mesh/';
 class DrawableMixin extends THREE.Mesh{
   constructor(base, module) {
     super();
-    // The position of the mixin is the local offset from parent GameObject
-    this.position.set(0, 0, 0);
-    // Load the geometry from the ObjectLoader
-    this.loadMesh(base, module);
-  }
-
-  loadMesh(base, module) {
-    if (module && module.mesh) {
-      loader.load(
-        objPath + module.mesh + '.json',
-        (g, m) => { this.loadMeshCallback(g, m); });
-    } else {
-      // Setup a default from base.dimensions, otherwise 1x1x1 cube
-      var dimensions = base.dimensions || {x: 1, y: 1, z: 1};
-      mesh = new THREE.CubeGeometry(dimensions.x, dimensions.y, dimensions.z);
-    }
-  }
-
-  loadMeshCallback(geometry, materials) {
-    this.geometry = geometry;
-    if (materials && materials.length > 0) {
-      console.log('Yes');
-      this.material = new THREE.MultiMaterial(materials);
-    }
   }
 }
 

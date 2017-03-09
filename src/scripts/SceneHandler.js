@@ -77,18 +77,21 @@ class SceneHandler {
       for (var y = 0; y < 5; y++) {
         for (var z = 0; z < 5; z++) {
           // Testing GameObjectFactory
-          var newObject = GameObjectFactory.build({
+          GameObjectFactory.build({
               base: {
-                position: new THREE.Vector3(x * 1, y * 1, z * -1)
+                position: new THREE.Vector3(x * 1, y * 1 - 20, z * -1)
               },
               drawable: {
-                mesh: 'basic/cube-1x1x1'
+                objFile: 'basic/cube-1x1x1'
               },
-              rigidbody: {}
+              rigidbody: {
+                colliderFile: 'basic/cube-1x1x1'
+              }
+            }).then((newObject) => {
+              this.scene.add(newObject);
+              this.world.add(newObject.rigidbody);
+              this.gameObjects.push(newObject);
             });
-          this.scene.add(newObject);
-          this.world.add(newObject.rigidbody);
-          this.gameObjects.push(newObject);
         }
       }
     }

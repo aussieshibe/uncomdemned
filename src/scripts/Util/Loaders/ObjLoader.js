@@ -22,32 +22,34 @@
  */
 
 // THREE.JSONLoader to be used by our ObjLoader
-var loader = new THREE.JSONLoader();
-var objPath = window.location.pathname + 'gamedata/mesh/';
-console.log(objPath);
+let loader = new THREE.JSONLoader();
+let objPath = window.location.pathname + 'gamedata/mesh/';
+
+// Singleton instance
+let instance = null;
 
 /**
- * The ObjLoader function
- * Returns a THREE.js geometry
- * NOTE: This currently just returns a basic geometry from the base.dimensions
- *
- * @param {Object} base The base options shared between modules
- * @param {Object} base.dimensions Object dimensions, used if no module.mesh
- * @param {Object} module The options specific to this module
- * @param {string} module.mesh The filename of the mesh to load
+ * The ObjLoader class
  */
-function ObjLoader(base, module, callback) {
-  var mesh;
-  if (module && module.mesh) {
-    console.log(objPath + module.mesh + '.json');
-    loader.load(
-      objPath + module.mesh + '.json');
-  } else {
-    // Setup a default from base.dimensions, otherwise 100x100x100 cube
-    var dimensions = base.dimensions || {x: 100, y: 100, z: 100};
-    mesh = new THREE.CubeGeometry(dimensions.x, dimensions.y, dimensions.z);
+class _ObjLoader {
+  constructor() {
+    if (!instance) {
+      instance = this;
+    }
+    return instance;
   }
-  return mesh;
+
+  load (objFile, callback) {
+    if (objFile) {
+      loader.load(
+          objPath + objFile + '.json',
+          (g, m) => { callback(g, m); });
+    } else {
+      throw new Error('Invalid parameters provided to ObjLoader');
+    }
+  }
 }
+
+let ObjLoader = new _ObjLoader();
 
 export { ObjLoader as default };

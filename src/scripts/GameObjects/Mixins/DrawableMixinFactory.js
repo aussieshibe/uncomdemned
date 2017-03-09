@@ -21,32 +21,31 @@
  * SOFTWARE.
  */
 
+import DrawableMixin from './DrawableMixin';
+import ObjLoader from '../../Util/Loaders/ObjLoader';
+
 /**
- * The RigidbodyMixin class
- * Defines a mixin to add a physics object to a GameObject
- * @param {Object} base The base options to be passed to all mixins
- * @param {number[]} base.position The coordinates of the GameObject
- * @param {Object} module The module specific options
+ * The DrawableMixinFactory class
+ * DrawableMixinFactory create a DrawableMixin and load any necessary resources
  */
-class RigidbodyMixin extends CANNON.Body {
-  constructor(base, module) {
-    super({mass: 1}); // TODO: Move mass to collider file
-    this.position.set(base.position.x, base.position.y, base.position.z);
-  }
+class DrawableMixinFactory {
+  constructor() {}
 
   /**
-   * Update sets the position and rotation of the parent to
-   * match the rigidbody
+   * The build function for DrawableMixinFactory
+   * @param {Object} options The options for the new DrawableMixin
+   * @param {number[]} options.position The position of the mixin within the obj
+   * @param {string} options.objFile The object file to apply to the DM
    */
-  update(parent, delta) {
-    parent.position.x = this.position.x;
-    parent.position.y = this.position.y;
-    parent.position.z = this.position.z;
-    parent.quaternion.x = this.quaternion.x;
-    parent.quaternion.y = this.quaternion.y;
-    parent.quaternion.z = this.quaternion.z;
-    parent.quaternion.w = this.quaternion.w;
+  build(options) {
+    var drawableMixin = new DrawableMixin();
+    ObjLoader.load(options.objFile, (g, m) => {
+      drawableMixin.geometry = g;
+      drawableMixin.material = new THREE.MultiMaterial(m);
+    });
+    return drawableMixin;
   }
+
 }
 
-export { RigidbodyMixin as default };
+export { DrawableMixinFactory as default };

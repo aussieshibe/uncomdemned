@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     jscs: {
       src: [
         'Gruntfile.js',
-        'src/scripts/**'
+        'src/scripts/**/*.js'
       ],
       options: {
         config: '.jscsrc',
@@ -42,14 +42,29 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
-          {expand: true, cwd: 'src/', src: 'lib/**', dest: 'build/scripts'},
-          {expand: true, cwd: 'src/', src: 'mesh/**', dest: 'build/gamedata/'}
+          {
+            expand: true,
+            cwd: 'src/',
+            src: 'lib/**',
+            dest: 'build/scripts'
+          },
+          {
+            expand: true,
+            cwd: 'src/',
+            src: 'mesh/**',
+            dest: 'build/gamedata/'
+          },
+          {
+            expand: true,
+            cwd: 'src/',
+            src: 'collider/**',
+            dest: 'build/gamedata/'}
         ]
       }
     },
     'watch': {
       scripts: {
-        files: ['src/**/*.js', 'src/**/*.html'],
+        files: ['src/**/*.js', 'src/**/*.html', 'src/**/*.json'],
         tasks: ['watchReload'],
         options: {
           livereload: true

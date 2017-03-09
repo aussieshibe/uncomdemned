@@ -22,8 +22,8 @@
  */
 
 import GameObject from './GameObject';
-import DrawableMixin from './Mixins/DrawableMixin';
-import RigidbodyMixin from './Mixins/RigidbodyMixin';
+import DrawableMixinFactory from './Mixins/DrawableMixinFactory';
+import RigidbodyMixinFactory from './Mixins/RigidbodyMixinFactory';
 
 /**
  * The GameObjectFactory class
@@ -31,26 +31,52 @@ import RigidbodyMixin from './Mixins/RigidbodyMixin';
  */
 class GameObjectFactory {
   constructor() {
+    this._DrawableMixinFactory = new DrawableMixinFactory();
+    this._RigidbodyMixinFactory = new RigidbodyMixinFactory();
   }
 
+  /**
+   * The build function for GameObjectFactory
+   * Creates GameObjects based on passed options
+   *
+   * @param {Object} options The options for the GameObject
+   * @param {Object} base The base options which apply to all modules
+   * @param {THREE.Vector3} position The position of the object
+   * @param {Object} drawable The options for the DrawableMixin if applicable
+   * @param {string} drawable.objFile The relative path to the objFile
+   * @param {Object} rigidbody The options for the RigidbodyMixin if applicable
+   * @param {string} rigidbody.colliderFile The relative path to colliderFile
+   */
   build(options) {
-    var go = new GameObject();
-    var pos = options.base.position;
-    if (options.drawable) {
-      go.mesh = new DrawableMixin(options.base, options.drawable);
-      // Add the new mesh to the parent GameObject
-      go.add(go.mesh);
-    }
-    if (options.rigidbody) {
-      go.rigidbody = new RigidbodyMixin(options.base, options.rigidbody);
-      var update = go.update;
-      go.update = function(delta) {
-        go.rigidbody.update(go, delta);
-        update();
-      };
-    }
-    go.position.set(pos.x, pos.y, pos.z);
-    return go;
+    return new Promise((resolve, reject) => {
+      // Create base GameObject
+      resolve(new GameObject());
+    }).then((gameObject) => {
+      // Setup DrawableMixin if required
+      if (options.drawable) {
+        gameObject.add(this._DrawableMixinFactory.build(options.drawable));
+      }
+      return gameObject;
+    }).then((gameObject) => {
+      // Setup RigidbodyMixin if required
+      if (options.rigidbody) {
+        return new Promise((resolve, reject) => {
+          this._RigidbodyMixinFactory.build(options.base, options.rigidbody)
+              .then((rigidbodyMixin) => {
+                gameObject.rigidbody = rigidbodyMixin;
+                var update = gameObject.update;
+                gameObject.update = function(delta) {
+                  gameObject.rigidbody.update(gameObject, delta);
+                  update();
+                };
+                resolve(gameObject);
+              });
+        });
+      } else {
+        return gameObject;
+      }
+    });
+    //return promise;
   }
 
 }
