@@ -4,8 +4,10 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     jscs: {
       src: [
-        'Gruntfile.js',
         'src/scripts/**/*.js'
+      ],
+      util: [
+        'Gruntfile.js'
       ],
       options: {
         config: '.jscsrc',
@@ -15,13 +17,13 @@ module.exports = function(grunt) {
     browserify: {
       development: {
         src: [
-          'src/scripts/**'
+          'src/scripts/**/*.js'
         ],
         dest: 'build/scripts/app.js',
         options: {
           browserifyOptions: {debug: true},
           transform: [['babelify', {presets: ['es2015']}]]
-        },
+        }
       }
     },
     'htmlmin': {
@@ -64,15 +66,23 @@ module.exports = function(grunt) {
     },
     'watch': {
       scripts: {
-        files: ['src/**/*.js', 'src/**/*.html', 'src/**/*.json'],
-        tasks: ['watchReload'],
-        options: {
-          livereload: true
-        }
+        files: ['src/scripts/**/*.js'],
+        tasks: ['watchRebuildScripts']
       },
       html: {
-        files: 'src/*.html',
-        tasks: ['htmlmin']
+        files: ['src/**/*.html'],
+        tasks: ['watchRebuildHtml']
+      },
+      libs: {
+        files: ['src/lib/**'],
+        tasks: ['watchRebuildLib']
+      },
+      util: {
+        files: ['Gruntfile.js'],
+        tasks: ['watchRebuildUtil']
+      },
+      options: {
+        livereload: true
       }
     },
     'connect': {
@@ -87,14 +97,21 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-jscs');
 
-  // Build-only task
-  grunt.registerTask('build', 'jscs', 'browserify', 'htmlmin', 'copy');
+  // Build-all task
+  grunt.registerTask('build', ['jscs', 'browserify', 'htmlmin', 'copy']);
 
   // Default task, builds project and then configures watch
   // for automatic rebuild + live reload on file edits
   grunt.registerTask('default',
-    ['jscs', 'browserify', 'htmlmin', 'copy', 'connect', 'watch']);
-  // The task to run when watch triggers a reload, does not include connect or
-  // watch tasks as these will already be running
-  grunt.registerTask('watchReload', ['jscs', 'browserify', 'htmlmin', 'copy']);
+    ['build', 'connect', 'watch']);
+
+  // Rebuilds all scripts and copies to build
+  grunt.registerTask('watchRebuildScripts', ['jscs:src', 'browserify']);
+  // Minifies + copies HTML to build
+  grunt.registerTask('watchRebuildHtml', ['htmlmin']);
+  // Copies static libs to build
+  grunt.registerTask('watchRebuildLibs', ['copy']);
+  // Does any required buildsteps for util files (e.g. Gruntfile.js)
+  grunt.registerTask('watchRebuildUtil', ['jscs:util']);
+
 };
